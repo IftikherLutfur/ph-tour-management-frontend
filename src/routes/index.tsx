@@ -1,13 +1,17 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import App from "../App";
 import about from "../pages/about";
-import Statistics from "../pages/statistic";
 import Login from "../pages/login";
 import Register from "../pages/register";
 import { Verify } from "../pages/verify";
-import  DashboardLayout  from "../components/layout/DashboardLayout";
+import DashboardLayout from "../components/layout/DashboardLayout";
 import { generateRoutes } from "../utils/generateRoute";
 import { adminSidebarItems } from "./adminSidebarItems";
+import { userSidebarItems } from "./userSidebarItems";
+import { withAuth } from "../utils/withAuth";
+import { Unauthorized } from "../pages/Unauthorized";
+import { role } from "../constants/role";
+import type { TRole } from "../types";
 
 export const router = createBrowserRouter([
   {
@@ -15,7 +19,7 @@ export const router = createBrowserRouter([
     path: "/",
     children: [
       {
-        Component: about,
+        Component: withAuth(about),
         path: "/about"
       }
     ]
@@ -23,20 +27,15 @@ export const router = createBrowserRouter([
 
   // Admin route
   {
-    Component: DashboardLayout,
+    Component: withAuth(DashboardLayout, role.admin as TRole),
     path: "/admin",
-    children: [...generateRoutes(adminSidebarItems)]
+    children: [{ index: true, element: <Navigate to="/admin/statistic" /> }, ...generateRoutes(adminSidebarItems)]
   },
 
   {
-    Component: DashboardLayout,
+    Component: withAuth(DashboardLayout, role.user as TRole),
     path: "/user",
-    children: [
-      {
-        Component: Statistics,
-        path: "tour-list"
-      }
-    ]
+    children: [...generateRoutes(userSidebarItems)]
   },
 
   {
@@ -50,6 +49,10 @@ export const router = createBrowserRouter([
   {
     Component: Verify,
     path: "/verify",
+  },
+  {
+    Component: Unauthorized,
+    path: "/unauthorize",
   },
 
 ]);

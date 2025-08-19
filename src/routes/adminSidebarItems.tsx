@@ -1,4 +1,5 @@
-import Statistics from "../pages/statistic";
+import { lazy } from "react";
+const Statistics = lazy(()=>import("../pages/statistic"))
 import type { ISidebarItem } from "../types";
 
 export const adminSidebarItems: ISidebarItem[] = [

@@ -18,3 +18,5 @@ export interface IResponse<T>{
         component: ComponentType
     }[]
  }
+
+export type TRole = "SUPER_ADMIN" | "ADMIN" | "USER"
