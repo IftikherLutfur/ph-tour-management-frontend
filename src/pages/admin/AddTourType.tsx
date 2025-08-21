@@ -8,14 +8,24 @@ import {
   TableHeader,
   TableRow,
 } from "../../components/ui/table"
-import { useTourInfoQuery } from "../../redux/features/Tour/tour.api"
+import {useRemoveTourTypeMutation, useTourInfoQuery } from "../../redux/features/Tour/tour.api"
 import { AddTourTypeModal } from "../../components/modules/Admin/AddTourType/AddTourTypeModal"
 import { Button } from "../../components/ui/button"
 import { Trash2 } from "lucide-react"
+import  {DeleteTourTypeModule}  from "../../components/modules/Admin/AddTourType/DeleteTourType"
+import { toast } from "sonner"
 
 export function AddTourType() {
   const { data } = useTourInfoQuery(undefined)
-  console.log(data)
+  const [removeTourType] = useRemoveTourTypeMutation()
+
+  const handleRemoveTypes = async(id : string) =>{
+    const removeType = await removeTourType(id).unwrap();
+    if(removeType.succes){
+      toast.success("Tour type has been deleted")
+    }
+    console.log(removeType)
+  }
 
   return (
     <Table>
@@ -35,11 +45,13 @@ export function AddTourType() {
 
       {/* Body */}
       <TableBody>
-        {data?.map((type: { _id: Key | null | undefined; name: string }) => (
+        {data?.map((type: { _id: Key | null | undefined| string; name: string }) => (
           <TableRow key={type._id}>
             <TableCell className="font-medium w-full">{type.name}</TableCell>
             <TableCell className="text-right">
+              <DeleteTourTypeModule onConfirm={() => typeof type._id === "string" ? handleRemoveTypes(type._id) : undefined}>
               <Button
+            
                 size="sm"
                 variant="destructive"
                 className="flex items-center gap-2"
@@ -47,6 +59,7 @@ export function AddTourType() {
                 <Trash2 className="w-4 h-4" />
                 Delete
               </Button>
+              </DeleteTourTypeModule>
             </TableCell>
           </TableRow>
         ))}

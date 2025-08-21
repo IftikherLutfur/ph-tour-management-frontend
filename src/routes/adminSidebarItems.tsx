@@ -3,6 +3,7 @@ const Statistics = lazy(()=>import("../pages/admin/statistic"))
 import type { ISidebarItem } from "../types";
 import {AddTourType} from "../pages/admin/AddTourType";
 import AddTour from "../pages/admin/AddTour";
+import { AddDivision } from "../pages/admin/AddDivision";
 
 export const adminSidebarItems: ISidebarItem[] = [
    
@@ -23,6 +24,11 @@ export const adminSidebarItems: ISidebarItem[] = [
           title: "Add Tour",
           url: "/admin/addTour",
           component: AddTour
+        },
+        {
+          title: "Add Division",
+          url: "/admin/addDivision",
+          component: AddDivision
         },
       ], 
     },

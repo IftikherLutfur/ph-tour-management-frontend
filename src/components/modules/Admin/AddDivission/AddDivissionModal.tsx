@@ -21,25 +21,29 @@ import {
 import { useForm } from "react-hook-form"
 import z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useTourTypePostMutation } from "../../../../redux/features/Tour/tour.api"
-import { toast } from "sonner"
+import { useDivissionPostMutation } from "../../../../redux/features/Division/division.api"
+// import { useTourTypePostMutation } from "../../../../redux/features/Tour/tour.api"
+// import { toast } from "sonner"
 
 const formSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
+    description: z.string(),
 })
 
-export function AddTourTypeModal() {
-    const [tourTypePost] = useTourTypePostMutation()
+export function AddDivissionModal() {
+    const [divissionPost] = useDivissionPostMutation(undefined)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
+            description: ""
         },
     })
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        const res = await tourTypePost({ name: values.name })
-        toast.success(res.data.message)
+        const res = await divissionPost({ name: values.name, description: values.description })
+        // toast.success(res.data.message)
+        console.log(res)
     }
 
     return (
@@ -72,6 +76,25 @@ export function AddTourTypeModal() {
                                     </FormControl>
                                     <FormDescription className="sr-only">
                                         This is the Tour Type Name field
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="description" // ✅ schema এর সাথে match
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Description</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Divission description here"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormDescription className="sr-only">
+                                        This is the divission description field
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
